@@ -3,6 +3,7 @@
   "framework": "vite",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- . ':(exclude)pdf-generados/**'",
   "functions": {
     "api/archive-pdf.js": {
       "maxDuration": 20
@@ -12,4 +13,3 @@
     }
   }
 }
-
