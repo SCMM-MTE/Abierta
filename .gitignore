@@ -5,3 +5,6 @@ dist/
 *.mhtml
 *.log
 
+
+.vercel
+.env*
