@@ -54,7 +54,7 @@ button { cursor: pointer; }
   font: 800 30px/1 'Manrope', sans-serif;
 }
 
-.eyebrow, .step {
+.step {
   margin: 0 0 7px;
   color: var(--red);
   font-size: 12px;
@@ -223,7 +223,6 @@ h2 { font-size: clamp(22px, 3vw, 28px); }
 .download-button:disabled { cursor: wait; opacity: 0.72; transform: none; }
 
 .download-panel { width: min(270px, 100%); }
-.download-panel small { display: block; margin-top: 7px; color: var(--muted); text-align: right; }
 .download-panel .download-button { width: 100%; justify-content: center; }
 
 .archive-status { margin: 0 30px 22px; border-radius: 11px; padding: 12px 14px; font-size: 13px; font-weight: 600; }
@@ -298,7 +297,6 @@ footer { padding: 8px 20px 34px; color: #82909c; text-align: center; font-size: 
   .results-heading { padding: 22px; }
   .download-button { width: 100%; justify-content: center; }
   .download-panel { width: 100%; }
-  .download-panel small { text-align: left; }
   .archive-status { margin-inline: 22px; }
   .preview-toolbar { align-items: stretch; flex-direction: column; padding: 14px 22px; }
   .paper-preview { padding: 18px 10px; }
