@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
-import { extractHtmlFromMhtml, extractServicesFromHtml } from '../src/extractor.js';
+import { extractHtmlFromMhtml, extractServices, extractServicesFromHtml } from '../src/extractor.js';
 import { buildServicesPdf } from '../src/pdf.js';
 import { createPdfFilename, formatMadridUploadDate } from '../src/filename.js';
 
@@ -32,6 +32,13 @@ test('localiza y decodifica la parte HTML de un MHT', () => {
   const html = extractHtmlFromMhtml(mht);
   const services = extractServicesFromHtml(html);
   assert.equal(services[0].text, 'L4  F  T1400  4-ARGÜELLES');
+});
+
+test('admite un EML con cabeceras anteriores a MIME-Version', () => {
+  const eml = `Delivered-To: usuario@example.com\r\nMIME-Version: 1.0\r\nContent-Type: multipart/related; boundary="eml-boundary"\r\n\r\n--eml-boundary\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Transfer-Encoding: binary\r\n\r\n<ul class="oreq-select-box-list-available-ul"><li class="service">L5  F  M0600  5-ALAMEDA OSUNA</li></ul>\r\n--eml-boundary--`;
+  const services = extractServices(eml);
+  assert.equal(services.length, 1);
+  assert.equal(services[0].text, 'L5  F  M0600  5-ALAMEDA OSUNA');
 });
 
 test('el archivo abierta.mht conserva los 624 servicios esperados', async context => {

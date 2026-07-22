@@ -7,9 +7,6 @@
   "functions": {
     "api/archive-pdf.js": {
       "maxDuration": 20
-    },
-    "api/fetch-url.js": {
-      "maxDuration": 20
     }
   }
 }

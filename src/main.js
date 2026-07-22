@@ -4,14 +4,8 @@ import { createPdfFilename } from './filename.js';
 import { buildServicesPdf } from './pdf.js';
 
 const elements = {
-  fileTab: document.querySelector('#file-tab'),
-  urlTab: document.querySelector('#url-tab'),
-  filePanel: document.querySelector('#file-panel'),
-  urlPanel: document.querySelector('#url-panel'),
   dropZone: document.querySelector('#drop-zone'),
   fileInput: document.querySelector('#file-input'),
-  urlForm: document.querySelector('#url-form'),
-  urlInput: document.querySelector('#url-input'),
   status: document.querySelector('#status'),
   results: document.querySelector('#results'),
   count: document.querySelector('#service-count'),
@@ -26,16 +20,6 @@ const elements = {
 };
 
 let services = [];
-
-function selectSource(source) {
-  const fileSelected = source === 'file';
-  elements.fileTab.classList.toggle('is-active', fileSelected);
-  elements.urlTab.classList.toggle('is-active', !fileSelected);
-  elements.fileTab.setAttribute('aria-selected', String(fileSelected));
-  elements.urlTab.setAttribute('aria-selected', String(!fileSelected));
-  elements.filePanel.hidden = !fileSelected;
-  elements.urlPanel.hidden = fileSelected;
-}
 
 function showStatus(message, type = 'loading') {
   elements.status.hidden = false;
@@ -158,8 +142,8 @@ function showError(error) {
 
 async function processFile(file) {
   if (!file) return;
-  if (!/\.(?:mht|mhtml)$/i.test(file.name)) {
-    showError(new Error('Selecciona un archivo con extensión .mht o .mhtml.'));
+  if (!/\.(?:mht|mhtml|html|htm|eml|txt)$/i.test(file.name)) {
+    showError(new Error('Selecciona un archivo MHT, MHTML, HTML, HTM, EML o TXT.'));
     return;
   }
 
@@ -174,34 +158,9 @@ async function processFile(file) {
   }
 }
 
-async function processUrl(url) {
-  showStatus('Descargando y analizando la página…');
-  elements.results.hidden = true;
-
-  try {
-    const response = await fetch('/api/fetch-url', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url }),
-    });
-    const data = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(data.error || 'No se pudo descargar esa URL.');
-    showResults(data.services, new URL(url).hostname);
-  } catch (error) {
-    showError(error);
-  }
-}
-
-elements.fileTab.addEventListener('click', () => selectSource('file'));
-elements.urlTab.addEventListener('click', () => selectSource('url'));
 elements.fileInput.addEventListener('change', event => processFile(event.target.files?.[0]));
 elements.searchInput.addEventListener('input', renderServices);
 elements.downloadButton.addEventListener('click', archiveAndDownload);
-
-elements.urlForm.addEventListener('submit', event => {
-  event.preventDefault();
-  processUrl(elements.urlInput.value.trim());
-});
 
 for (const eventName of ['dragenter', 'dragover']) {
   elements.dropZone.addEventListener(eventName, event => {

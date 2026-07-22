@@ -108,30 +108,7 @@ h2 { font-size: clamp(22px, 3vw, 28px); }
   font-weight: 700;
 }
 
-.source-tabs {
-  display: flex;
-  gap: 5px;
-  width: fit-content;
-  margin: 28px 0 20px;
-  padding: 5px;
-  border-radius: 13px;
-  background: #edf2f5;
-}
-
-.source-tab {
-  border: 0;
-  border-radius: 9px;
-  padding: 10px 20px;
-  color: #617284;
-  background: transparent;
-  font-weight: 700;
-}
-
-.source-tab.is-active {
-  color: var(--navy);
-  background: white;
-  box-shadow: 0 2px 8px rgba(18, 42, 60, 0.09);
-}
+.source-panel { margin-top: 28px; }
 
 .drop-zone {
   display: flex;
@@ -175,21 +152,16 @@ h2 { font-size: clamp(22px, 3vw, 28px); }
   stroke-width: 1.8;
 }
 
-.url-form { min-height: 230px; padding: 40px; border-radius: 16px; background: #f6f8fa; }
-.url-form label { display: block; margin-bottom: 10px; color: var(--ink); font-weight: 700; }
-.url-row { display: flex; gap: 10px; }
-.url-row input, .search-box input {
+.search-box input {
   min-width: 0;
   border: 1px solid #cbd7de;
   outline: none;
   color: var(--ink);
   background: white;
 }
-.url-row input { flex: 1; border-radius: 11px; padding: 13px 15px; }
-.url-row input:focus, .search-box:focus-within { border-color: var(--red); box-shadow: 0 0 0 3px rgba(229, 35, 63, 0.1); }
-.field-help { margin: 12px 0 0; color: var(--muted); font-size: 13px; }
+.search-box:focus-within { border-color: var(--red); box-shadow: 0 0 0 3px rgba(229, 35, 63, 0.1); }
 
-.primary-button, .download-button {
+.download-button {
   border: 0;
   border-radius: 11px;
   color: white;
@@ -197,8 +169,7 @@ h2 { font-size: clamp(22px, 3vw, 28px); }
   font-weight: 700;
   transition: background 150ms ease, transform 150ms ease;
 }
-.primary-button { padding: 0 25px; }
-.primary-button:hover, .download-button:hover { background: var(--red-dark); transform: translateY(-1px); }
+.download-button:hover { background: var(--red-dark); transform: translateY(-1px); }
 
 .status {
   display: flex;
@@ -289,11 +260,6 @@ footer { padding: 8px 20px 34px; color: #82909c; text-align: center; font-size: 
   .source-card { padding: 20px; }
   .section-heading, .results-heading { align-items: flex-start; flex-direction: column; }
   .privacy-pill { display: none; }
-  .source-tabs { width: 100%; }
-  .source-tab { flex: 1; }
-  .url-form { min-height: 0; padding: 22px; }
-  .url-row { flex-direction: column; }
-  .primary-button { padding: 13px; }
   .results-heading { padding: 22px; }
   .download-button { width: 100%; justify-content: center; }
   .download-panel { width: 100%; }

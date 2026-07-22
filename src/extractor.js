@@ -184,9 +184,11 @@ export function extractServicesFromHtml(html) {
 }
 
 export function extractServices(source) {
-  const html = /^\s*(?:From:|MIME-Version:|Snapshot-Content-Location:)/i.test(source)
+  const sourceHeaders = source.slice(0, 8192);
+  const isMimeDocument = /^\s*(?:From:|MIME-Version:|Snapshot-Content-Location:)/i.test(source)
+    || (/\bMIME-Version\s*:/i.test(sourceHeaders) && /\bContent-Type\s*:\s*multipart\//i.test(sourceHeaders));
+  const html = isMimeDocument
     ? extractHtmlFromMhtml(source)
     : source;
   return extractServicesFromHtml(html);
 }
-

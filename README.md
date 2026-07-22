@@ -1,8 +1,8 @@
-# Abierta limpia
+# Petición Abierta
 
-Aplicación web para extraer la lista de servicios disponibles de una página de
-Petición Abierta o de un archivo `.mht`/`.mhtml`, previsualizarla y descargarla
-como un PDF limpio.
+Aplicación web para extraer la lista de servicios disponibles de archivos
+`.mht`, `.mhtml`, `.html`, `.htm`, `.eml` o `.txt`, previsualizarla y
+descargarla como un PDF limpio.
 
 Al descargar, el PDF se archiva también en `pdf-generados/` dentro de GitHub
 con un nombre único como
@@ -15,9 +15,7 @@ npm install
 npm run dev
 ```
 
-La carga de archivos se procesa íntegramente en el navegador. La opción URL
-utiliza la función `api/fetch-url.js`; las páginas privadas que requieran una
-sesión iniciada pueden rechazar esa descarga, en cuyo caso se debe usar el MHT.
+La carga de archivos se procesa íntegramente en el navegador.
 
 ## Archivo automático en GitHub
 
