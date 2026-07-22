@@ -3,12 +3,12 @@ import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import { extractHtmlFromMhtml, extractServicesFromHtml } from '../src/extractor.js';
 import { buildServicesPdf } from '../src/pdf.js';
-import { createPdfFilename, formatMadridDate } from '../src/filename.js';
+import { createPdfFilename, formatMadridUploadDate } from '../src/filename.js';
 
 test('genera el nombre solicitado con la fecha de Madrid', () => {
   const date = new Date('2026-07-22T18:30:00Z');
-  assert.equal(formatMadridDate(date), '22-07-2026');
-  assert.equal(createPdfFilename(date), 'Equipos petición abierta - 22-07-2026.pdf');
+  assert.equal(formatMadridUploadDate(date), '22-07-2026 - 20-30-00');
+  assert.equal(createPdfFilename(date), 'Equipos petición abierta - 22-07-2026 - 20-30-00.pdf');
 });
 
 test('extrae solamente los li.service de la lista disponible', () => {

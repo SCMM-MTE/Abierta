@@ -1,14 +1,14 @@
-import crypto from 'node:crypto';
 import { createPdfFilename } from '../src/filename.js';
 
 const MAX_PDF_BYTES = 4 * 1024 * 1024;
 
-function safeEqual(actual, expected) {
-  const actualBuffer = Buffer.from(actual ?? '', 'utf8');
-  const expectedBuffer = Buffer.from(expected ?? '', 'utf8');
-  return actualBuffer.length === expectedBuffer.length
-    && actualBuffer.length > 0
-    && crypto.timingSafeEqual(actualBuffer, expectedBuffer);
+function isAllowedOrigin(request) {
+  const allowedOrigins = (process.env.ALLOWED_UPLOAD_ORIGINS ?? 'https://abierta-limpia.vercel.app')
+    .split(',')
+    .map(value => value.trim())
+    .filter(Boolean);
+  const origin = request.headers?.origin;
+  return typeof origin === 'string' && allowedOrigins.includes(origin);
 }
 
 function githubHeaders(token) {
@@ -75,11 +75,7 @@ export default async function handler(request, response) {
     return response.status(405).json({ error: 'Método no permitido.' });
   }
 
-  const expectedKey = process.env.PDF_UPLOAD_SECRET;
-  if (!expectedKey) return response.status(503).json({ error: 'El archivo automático todavía no está configurado.' });
-  if (!safeEqual(request.headers?.['x-upload-key'], expectedKey)) {
-    return response.status(401).json({ error: 'La clave de archivo no es correcta.' });
-  }
+  if (!isAllowedOrigin(request)) return response.status(403).json({ error: 'Origen no permitido.' });
 
   try {
     const content = typeof request.body?.content === 'string' ? request.body.content : '';
@@ -97,4 +93,3 @@ export default async function handler(request, response) {
     return response.status(422).json({ error: message });
   }
 }
-

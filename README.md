@@ -5,8 +5,8 @@ Petición Abierta o de un archivo `.mht`/`.mhtml`, previsualizarla y descargarla
 como un PDF limpio.
 
 Al descargar, el PDF se archiva también en `pdf-generados/` dentro de GitHub
-con el nombre `Equipos petición abierta - dd-mm-aaaa.pdf`. Si ya existe un PDF
-de ese día, se actualiza.
+con un nombre único como
+`Equipos petición abierta - dd-mm-aaaa - hh-mm-ss.pdf`.
 
 ## Desarrollo
 
@@ -24,7 +24,8 @@ sesión iniciada pueden rechazar esa descarga, en cuyo caso se debe usar el MHT.
 Configura en Vercel las variables descritas en `.env.example`. El token de
 GitHub debe ser de granularidad fina, estar limitado al repositorio de archivo
 y conceder solamente `Contents: Read and write`. Nunca debe exponerse en el
-navegador ni añadirse al repositorio.
+navegador ni añadirse al repositorio. La función solo admite solicitudes desde
+los orígenes indicados en `ALLOWED_UPLOAD_ORIGINS`.
 
 ## Despliegue en Vercel
 

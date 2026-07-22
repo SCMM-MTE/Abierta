@@ -22,7 +22,6 @@ const elements = {
   emptyFilter: document.querySelector('#empty-filter'),
   downloadButton: document.querySelector('#download-button'),
   downloadButtonText: document.querySelector('#download-button span'),
-  archiveKey: document.querySelector('#archive-key'),
   archiveStatus: document.querySelector('#archive-status'),
 };
 
@@ -121,13 +120,6 @@ function showArchiveStatus(message, type, url = '') {
 }
 
 async function archiveAndDownload() {
-  const uploadKey = elements.archiveKey.value.trim();
-  if (!uploadKey) {
-    showArchiveStatus('Introduce la clave de archivo para guardar el PDF en GitHub.', 'error');
-    elements.archiveKey.focus();
-    return;
-  }
-
   elements.downloadButton.disabled = true;
   elements.downloadButtonText.textContent = 'Guardando…';
   elements.archiveStatus.hidden = true;
@@ -141,7 +133,6 @@ async function archiveAndDownload() {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-Upload-Key': uploadKey,
       },
       body: JSON.stringify({ content: arrayBufferToBase64(pdfBuffer) }),
     });
@@ -206,13 +197,6 @@ elements.urlTab.addEventListener('click', () => selectSource('url'));
 elements.fileInput.addEventListener('change', event => processFile(event.target.files?.[0]));
 elements.searchInput.addEventListener('input', renderServices);
 elements.downloadButton.addEventListener('click', archiveAndDownload);
-elements.archiveKey.addEventListener('input', () => {
-  try {
-    sessionStorage.setItem('abierta-upload-key', elements.archiveKey.value);
-  } catch {
-    // La sesión privada puede impedir el almacenamiento; la clave seguirá funcionando.
-  }
-});
 
 elements.urlForm.addEventListener('submit', event => {
   event.preventDefault();
@@ -234,9 +218,3 @@ for (const eventName of ['dragleave', 'drop']) {
 }
 
 elements.dropZone.addEventListener('drop', event => processFile(event.dataTransfer?.files?.[0]));
-
-try {
-  elements.archiveKey.value = sessionStorage.getItem('abierta-upload-key') ?? '';
-} catch {
-  // No es imprescindible conservar la clave entre recargas.
-}
