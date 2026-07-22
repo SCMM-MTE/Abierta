@@ -1,1 +1,32 @@
-# Abierta
+# Abierta limpia
+
+Aplicación web para extraer la lista de servicios disponibles de una página de
+Petición Abierta o de un archivo `.mht`/`.mhtml`, previsualizarla y descargarla
+como un PDF limpio.
+
+Al descargar, el PDF se archiva también en `pdf-generados/` dentro de GitHub
+con el nombre `Equipos petición abierta - dd-mm-aaaa.pdf`. Si ya existe un PDF
+de ese día, se actualiza.
+
+## Desarrollo
+
+```bash
+npm install
+npm run dev
+```
+
+La carga de archivos se procesa íntegramente en el navegador. La opción URL
+utiliza la función `api/fetch-url.js`; las páginas privadas que requieran una
+sesión iniciada pueden rechazar esa descarga, en cuyo caso se debe usar el MHT.
+
+## Archivo automático en GitHub
+
+Configura en Vercel las variables descritas en `.env.example`. El token de
+GitHub debe ser de granularidad fina, estar limitado al repositorio de archivo
+y conceder solamente `Contents: Read and write`. Nunca debe exponerse en el
+navegador ni añadirse al repositorio.
+
+## Despliegue en Vercel
+
+Importa el repositorio en Vercel. El framework y los comandos se detectan desde
+`vercel.json` y `package.json`.

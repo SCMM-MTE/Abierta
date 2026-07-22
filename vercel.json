@@ -1,0 +1,15 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "vite",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "functions": {
+    "api/archive-pdf.js": {
+      "maxDuration": 20
+    },
+    "api/fetch-url.js": {
+      "maxDuration": 20
+    }
+  }
+}
+
