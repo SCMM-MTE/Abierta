@@ -89,8 +89,10 @@ function fixMojibake(value) {
 
 function extractAttribute(attributes, name) {
   const escapedName = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const match = attributes.match(new RegExp(`(?:^|\\s)${escapedName}\\s*=\\s*(["'])(.*?)\\1`, 'i'));
-  return match?.[2] ?? '';
+  const match = attributes.match(
+    new RegExp(`(?:^|\\s)${escapedName}\\s*=\\s*(?:(["'])(.*?)\\1|([^\\s"'=<>]+))`, 'i'),
+  );
+  return match?.[2] ?? match?.[3] ?? '';
 }
 
 function cleanVisibleText(value) {
@@ -138,11 +140,16 @@ export function extractHtmlFromMhtml(source) {
 }
 
 export function extractServicesFromHtml(html) {
-  const listPattern = new RegExp(
-    `<ul\\b(?=[^>]*\\bclass\\s*=\\s*["'][^"']*\\b${TARGET_LIST_CLASS}\\b[^"']*["'])[^>]*>`,
-    'i',
-  );
-  const openingList = listPattern.exec(html);
+  const listPattern = /<ul\b([^>]*)>/gi;
+  let openingList;
+  let listMatch;
+
+  while ((listMatch = listPattern.exec(html)) !== null) {
+    const className = extractAttribute(listMatch[1], 'class');
+    if (!className.split(/\s+/).includes(TARGET_LIST_CLASS)) continue;
+    openingList = listMatch;
+    break;
+  }
 
   if (!openingList) {
     throw new Error('No se encontró la lista de servicios disponibles en el documento.');
@@ -154,7 +161,7 @@ export function extractServicesFromHtml(html) {
 
   const listHtml = html.slice(listStart, listStart + listEnd);
   const services = [];
-  const itemPattern = /<li\b([^>]*)>([\s\S]*?)<\/li\s*>/gi;
+  const itemPattern = /<li\b([^>]*)>([\s\S]*?)(?=<li\b|$)/gi;
   let match;
 
   while ((match = itemPattern.exec(listHtml)) !== null) {

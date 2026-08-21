@@ -27,6 +27,21 @@ test('extrae solamente los li.service de la lista disponible', () => {
   assert.equal(services[1].id, '13');
 });
 
+test('admite HTML minimizado por SingleFile con atributos sin comillas y cierres li omitidos', () => {
+  const html = `
+    <ul id=available class=oreq-select-box-list-available-ul>
+      <li class=empty-value data-value style=display:none disabled>No hay datos
+      <li data-value=3874109 data-line=/1/ data-shift=F0645 class=service>(*) L1 F F0645 1-DEPOSITO 9 (ZONA 1)
+      <li data-value=3874033 data-line=/1/ data-shift=M0600 class=service>L1 SU M0600 1-DEPOSITO 9 (ZONA 1)
+    </ul>`;
+
+  const services = extractServicesFromHtml(html);
+  assert.equal(services.length, 2);
+  assert.equal(services[0].text, '(*) L1 F F0645 1-DEPOSITO 9 (ZONA 1)');
+  assert.equal(services[0].id, '3874109');
+  assert.equal(services[1].shift, 'M0600');
+});
+
 test('localiza y decodifica la parte HTML de un MHT', () => {
   const mht = `MIME-Version: 1.0\r\nContent-Type: multipart/related; boundary="test-boundary"\r\n\r\n--test-boundary\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<ul class=3D"oreq-select-box-list-available-ul"><li class=3D"service">L4  F  T1400  4-ARG=C3=9CELLES</li></ul>\r\n--test-boundary--`;
   const html = extractHtmlFromMhtml(mht);
