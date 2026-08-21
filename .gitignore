@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.vercel/
+*.mht
+*.mhtml
+*.log
+
+
+.vercel
+.env*
