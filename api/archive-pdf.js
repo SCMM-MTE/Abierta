@@ -3,7 +3,7 @@ import { createPdfFilename } from '../src/filename.js';
 const MAX_PDF_BYTES = 4 * 1024 * 1024;
 
 function isAllowedOrigin(request) {
-  const allowedOrigins = (process.env.ALLOWED_UPLOAD_ORIGINS ?? 'https://abierta-limpia.vercel.app')
+  const allowedOrigins = (process.env.ALLOWED_UPLOAD_ORIGINS ?? 'https://abierta-pdf.vercel.app')
     .split(',')
     .map(value => value.trim())
     .filter(Boolean);

@@ -16,10 +16,15 @@ const elements = {
   emptyFilter: document.querySelector('#empty-filter'),
   downloadButton: document.querySelector('#download-button'),
   downloadButtonText: document.querySelector('#download-button span'),
+  shareButton: document.querySelector('#share-button'),
+  shareButtonText: document.querySelector('#share-button span'),
+  downloadFallback: document.querySelector('#download-fallback'),
   archiveStatus: document.querySelector('#archive-status'),
 };
 
 let services = [];
+let activeDownloadUrl = '';
+let downloadCleanupTimer;
 
 function showStatus(message, type = 'loading') {
   elements.status.hidden = false;
@@ -78,14 +83,45 @@ function arrayBufferToBase64(buffer) {
 }
 
 function downloadPdf(buffer, fileName) {
-  const url = URL.createObjectURL(new Blob([buffer], { type: 'application/pdf' }));
+  const blob = new Blob([buffer], { type: 'application/pdf' });
+
+  if (typeof navigator.msSaveOrOpenBlob === 'function') {
+    navigator.msSaveOrOpenBlob(blob, fileName);
+    return;
+  }
+
+  if (activeDownloadUrl) URL.revokeObjectURL(activeDownloadUrl);
+  clearTimeout(downloadCleanupTimer);
+
+  const url = URL.createObjectURL(blob);
+  activeDownloadUrl = url;
+  elements.downloadFallback.href = url;
+  elements.downloadFallback.download = fileName;
+  elements.downloadFallback.hidden = false;
+
   const link = document.createElement('a');
   link.href = url;
   link.download = fileName;
+  if (!('download' in link)) link.target = '_blank';
   document.body.append(link);
   link.click();
   link.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+  downloadCleanupTimer = setTimeout(() => {
+    if (activeDownloadUrl !== url) return;
+    URL.revokeObjectURL(url);
+    activeDownloadUrl = '';
+    elements.downloadFallback.hidden = true;
+    elements.downloadFallback.removeAttribute('href');
+  }, 120000);
+}
+
+function createPdfFile() {
+  const document = buildServicesPdf(services);
+  const buffer = document.output('arraybuffer');
+  const fileName = createPdfFilename();
+  const file = new File([buffer], fileName, { type: 'application/pdf' });
+  return { buffer, file, fileName };
 }
 
 function showArchiveStatus(message, type, url = '') {
@@ -108,9 +144,8 @@ async function archiveAndDownload() {
   elements.downloadButtonText.textContent = 'Guardando…';
   elements.archiveStatus.hidden = true;
 
-  const document = buildServicesPdf(services);
-  const pdfBuffer = document.output('arraybuffer');
-  let fileName = createPdfFilename();
+  const { buffer: pdfBuffer, fileName } = createPdfFile();
+  downloadPdf(pdfBuffer, fileName);
 
   try {
     const response = await fetch('/api/archive-pdf', {
@@ -123,15 +158,51 @@ async function archiveAndDownload() {
     const data = await response.json().catch(() => ({}));
     if (!response.ok) throw new Error(data.error || 'No se pudo guardar el PDF en GitHub.');
 
-    fileName = data.fileName || fileName;
-    showArchiveStatus(`${fileName} se ha guardado en GitHub.`, 'success', data.url);
+    const archivedFileName = data.fileName || fileName;
+    showArchiveStatus(`${archivedFileName} se ha guardado en GitHub.`, 'success', data.url);
   } catch (error) {
     const message = error instanceof Error ? error.message : 'No se pudo guardar el PDF en GitHub.';
-    showArchiveStatus(`${message} Se descargará una copia local.`, 'error');
+    showArchiveStatus(`${message} El PDF se ha descargado localmente.`, 'error');
   } finally {
-    downloadPdf(pdfBuffer, fileName);
     elements.downloadButton.disabled = false;
     elements.downloadButtonText.textContent = 'Guardar y descargar PDF';
+  }
+}
+
+async function sharePdf() {
+  elements.shareButton.disabled = true;
+  elements.shareButtonText.textContent = 'Preparando…';
+
+  const { buffer, file, fileName } = createPdfFile();
+  const canSharePdf = typeof navigator.share === 'function'
+    && typeof navigator.canShare === 'function'
+    && navigator.canShare({ files: [file] });
+
+  if (!canSharePdf) {
+    downloadPdf(buffer, fileName);
+    showArchiveStatus(
+      'Este navegador no permite adjuntar el PDF directamente. Se ha descargado para que puedas enviarlo como documento desde WhatsApp.',
+      'error',
+    );
+    elements.shareButton.disabled = false;
+    elements.shareButtonText.textContent = 'Compartir por WhatsApp';
+    return;
+  }
+
+  try {
+    await navigator.share({
+      files: [file],
+      title: 'Petición Abierta',
+      text: 'PDF de servicios de Petición Abierta',
+    });
+    showArchiveStatus('PDF compartido correctamente.', 'success');
+  } catch (error) {
+    if (!(error instanceof DOMException && error.name === 'AbortError')) {
+      showArchiveStatus('No se pudo abrir el menú para compartir el PDF.', 'error');
+    }
+  } finally {
+    elements.shareButton.disabled = false;
+    elements.shareButtonText.textContent = 'Compartir por WhatsApp';
   }
 }
 
@@ -161,6 +232,7 @@ async function processFile(file) {
 elements.fileInput.addEventListener('change', event => processFile(event.target.files?.[0]));
 elements.searchInput.addEventListener('input', renderServices);
 elements.downloadButton.addEventListener('click', archiveAndDownload);
+elements.shareButton.addEventListener('click', sharePdf);
 
 for (const eventName of ['dragenter', 'dragover']) {
   elements.dropZone.addEventListener(eventName, event => {

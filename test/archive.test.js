@@ -24,7 +24,7 @@ test('archiva un PDF válido en la carpeta configurada de GitHub', async () => {
 
   process.env.GITHUB_ARCHIVE_TOKEN = 'test-token';
   process.env.GITHUB_ARCHIVE_REPO = 'SCMM-MTE/Abierta';
-  process.env.ALLOWED_UPLOAD_ORIGINS = 'https://abierta-limpia.vercel.app';
+  process.env.ALLOWED_UPLOAD_ORIGINS = 'https://abierta-pdf.vercel.app';
   globalThis.fetch = async (url, options = {}) => {
     requests.push({ url: String(url), options });
     if (!options.method) return new Response('{}', { status: 404 });
@@ -34,7 +34,7 @@ test('archiva un PDF válido en la carpeta configurada de GitHub', async () => {
   try {
     const response = mockResponse();
     const content = Buffer.from('%PDF-1.7\nprueba').toString('base64');
-    await handler({ method: 'POST', headers: { origin: 'https://abierta-limpia.vercel.app' }, body: { content } }, response);
+    await handler({ method: 'POST', headers: { origin: 'https://abierta-pdf.vercel.app' }, body: { content } }, response);
 
     assert.equal(response.statusCode, 200);
     assert.match(response.payload.fileName, /^Equipos petición abierta - \d{2}-\d{2}-\d{4} - \d{2}-\d{2}-\d{2}\.pdf$/);
@@ -55,7 +55,7 @@ test('archiva un PDF válido en la carpeta configurada de GitHub', async () => {
 
 test('rechaza solicitudes de otros orígenes', async () => {
   const previousOrigins = process.env.ALLOWED_UPLOAD_ORIGINS;
-  process.env.ALLOWED_UPLOAD_ORIGINS = 'https://abierta-limpia.vercel.app';
+  process.env.ALLOWED_UPLOAD_ORIGINS = 'https://abierta-pdf.vercel.app';
 
   try {
     const response = mockResponse();
