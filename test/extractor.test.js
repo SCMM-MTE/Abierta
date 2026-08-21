@@ -11,6 +11,15 @@ test('genera el nombre solicitado con la fecha de Madrid', () => {
   assert.equal(createPdfFilename(date), 'Equipos petición abierta - 22-07-2026 - 20-30-00.pdf');
 });
 
+test('conserva los acentos en el título interno del PDF', () => {
+  const document = buildServicesPdf([{ text: 'L1 F M0600 1-DEPOSITO' }]);
+  const properties = document.__private__.getDocumentProperties();
+
+  assert.equal(properties.title, 'Petición Abierta');
+  assert.equal(properties.subject, 'Servicios disponibles de Petición Abierta');
+  assert.match(document.output(), /\/Title \(Petición Abierta\)/);
+});
+
 test('extrae solamente los li.service de la lista disponible', () => {
   const html = `
     <ul class="menu"><li>Ignorar menú</li></ul>

@@ -1,6 +1,7 @@
 import { jsPDF } from 'jspdf';
 
 const POINTS_PER_MM = 72 / 25.4;
+const PDF_TITLE = 'Petición Abierta';
 
 export function buildServicesPdf(services) {
   const document = new jsPDF({
@@ -8,6 +9,12 @@ export function buildServicesPdf(services) {
     unit: 'pt',
     format: 'a4',
     compress: true,
+  });
+
+  document.setProperties({
+    title: PDF_TITLE,
+    subject: `Servicios disponibles de ${PDF_TITLE}`,
+    creator: PDF_TITLE,
   });
 
   const pageWidth = document.internal.pageSize.getWidth();
