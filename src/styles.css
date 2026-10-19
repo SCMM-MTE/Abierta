@@ -295,7 +295,7 @@ body { background:radial-gradient(circle at 8% 0%,rgba(40,123,197,.1),transparen
 .hero h1 { color:#fff; }
 .hero__copy { color:#d1e4ff; }
 .hero > div { flex:1 1 420px; }
-.scmm-logo { display:block; width:132px; height:auto; background:#000; border-radius:8px; }
+.scmm-logo { display:block; width:132px; height:auto; background:transparent; border-radius:8px; }
 .theme-control { display:grid; gap:6px; color:#d1e4ff; font-size:12px; font-weight:700; }
 .theme-control select { width:160px; padding:9px 12px; border:1px solid #7095c2; border-radius:9px; color:#fff; background:#122d50; font:inherit; }
 .theme-control option { color:#fff; background:#122d50; }

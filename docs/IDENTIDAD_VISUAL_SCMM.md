@@ -9,9 +9,9 @@ Permutas MTE en todos los proyectos del SCMM, incluida la aplicación Android.
 - Fondo claro `#f0f5fc`, superficies blancas, selecciones `#e2efff` y
   bordes `#cbdcf1`; texto principal `#172b48` y secundario `#60728c`.
 - Usar el logo proporcionado por el usuario, sin redibujarlo ni deformarlo.
-  Conservar su fondo negro, relación de aspecto y texto alternativo SCMM.
-  Las copias PNG conservan los píxeles del BMP original, que permanece en
-  los adjuntos de la sesión. No se incorpora el BMP de 24 MB al paquete.
+  Desde el 19/10/2026, el original es `scmm-logo.svg`, aportado por el usuario.
+  Conservar su transparencia y proporción cuadrada, sin fondo negro añadido.
+  `scmm-logo.png` es una rasterización fiel de 1024 × 1024 para Flutter y PDF.
 - Mantener avisos, errores y estados de calendario distinguibles por texto
   y color. No convertir todos los estados semánticos a azul.
 - Bordes redondeados, sombras suaves, foco de teclado visible y diseño adaptable.
