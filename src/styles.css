@@ -276,3 +276,44 @@ footer { padding: 8px 20px 34px; color: #82909c; text-align: center; font-size: 
   .paper-preview { padding: 18px 10px; }
   .paper-preview ol { padding: 40px 25px 40px 52px; font-size: 13px; }
 }
+
+/* SCMM: original logo, blue identity and device-aware appearance. */
+:root {
+  --ink:#172b48; --muted:#60728c; --navy:#172b48;
+  --red:#1d64bd; --red-dark:#164f9b; --line:#cbdcf1;
+  --surface:#fff; --canvas:#f0f5fc; --selection:#e2efff;
+  --paper:#fff;
+  color:var(--ink); background:var(--canvas);
+}
+html[data-theme="dark"] {
+  --ink:#e4edff; --muted:#b2c2da; --navy:#e4edff;
+  --red:#83b9ff; --red-dark:#bcd9ff; --line:#3d5778;
+  --surface:#192f49; --canvas:#0c1728; --selection:#203e62;
+}
+body { background:radial-gradient(circle at 8% 0%,rgba(40,123,197,.1),transparent 28rem),var(--canvas); }
+.hero { flex-wrap:wrap; align-items:center; padding:28px; border-radius:22px; background:linear-gradient(120deg,#0b244b,#164b8f 60%,#287bc5); }
+.hero h1 { color:#fff; }
+.hero__copy { color:#d1e4ff; }
+.hero > div { flex:1 1 420px; }
+.scmm-logo { display:block; width:132px; height:auto; background:#000; border-radius:8px; }
+.theme-control { display:grid; gap:6px; color:#d1e4ff; font-size:12px; font-weight:700; }
+.theme-control select { width:160px; padding:9px 12px; border:1px solid #7095c2; border-radius:9px; color:#fff; background:#122d50; font:inherit; }
+.theme-control option { color:#fff; background:#122d50; }
+.source-card,.results-card { background:var(--surface); border-color:var(--line); }
+.drop-zone,.search-box,.search-box input { color:var(--ink); background:var(--surface); border-color:var(--line); }
+.drop-zone:hover,.drop-zone.is-dragging { background:var(--selection); }
+.drop-zone small { color:var(--muted); }
+.upload-icon { color:var(--red); background:var(--selection); }
+.download-button { color:#fff; background:linear-gradient(120deg,#164f9b,#287bc5); }
+.download-button:hover { background:#164f9b; }
+.preview-toolbar,.paper-preview { background:var(--canvas); }
+/* This is a preview of the exported document: retain black ink and white paper. */
+.paper-preview ol { color:#050505; background:#fff; }
+footer { color:var(--muted); }
+:focus-visible { outline:3px solid #83b9ff; outline-offset:3px; }
+.drop-zone:focus-within { outline:3px solid #83b9ff; outline-offset:3px; }
+html[data-theme="dark"] .privacy-pill,html[data-theme="dark"] .archive-status--success { color:#91dfb6; background:#153d2e; }
+html[data-theme="dark"] .status--loading { color:#c6dcfa; background:#203e62; }
+html[data-theme="dark"] .status--error,html[data-theme="dark"] .archive-status--error { color:#ffb4bf; background:#49282e; }
+@media (max-width:680px) { .hero { padding:22px; gap:18px; } .hero > div { flex-basis:100%; } .scmm-logo { width:110px; } .hero h1 { font-size:34px; } }
+@media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none !important; transition:none !important; } }

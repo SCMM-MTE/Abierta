@@ -3,17 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#071b2d" />
+    <meta name="theme-color" content="#164b8f" />
     <meta
       name="description"
       content="Extrae servicios de Petición Abierta desde archivos MHT, MHTML, HTML, EML o TXT y descárgalos como PDF limpio."
     />
+    <meta name="color-scheme" content="light dark">
+    <link rel="icon" href="/scmm-logo.png">
+    <script src="/theme.js"></script>
     <title>Petición Abierta</title>
   </head>
   <body>
     <main class="app-shell">
       <header class="hero">
-        <div class="hero__mark" aria-hidden="true">A</div>
+        <img class="scmm-logo" src="/scmm-logo.png" alt="SCMM">
         <div>
           <h1>Petición Abierta</h1>
           <p class="hero__copy">
@@ -21,6 +24,7 @@
             con un servicio por párrafo.
           </p>
         </div>
+        <label class="theme-control"><span>Apariencia</span><select data-scmm-theme aria-label="Apariencia"><option value="system">Sistema</option><option value="light">Claro</option><option value="dark">Oscuro</option></select></label>
       </header>
 
       <section class="source-card" aria-labelledby="source-title">
