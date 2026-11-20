@@ -29,9 +29,16 @@ let downloadCleanupTimer;
 function showStatus(message, type = 'loading') {
   elements.status.hidden = false;
   elements.status.className = `status status--${type}`;
-  elements.status.innerHTML = type === 'loading'
-    ? `<span class="spinner" aria-hidden="true"></span><span>${message}</span>`
-    : `<span>${message}</span>`;
+  const text = document.createElement('span');
+  text.textContent = String(message);
+  elements.status.replaceChildren();
+  if (type === 'loading') {
+    const spinner = document.createElement('span');
+    spinner.className = 'spinner';
+    spinner.setAttribute('aria-hidden', 'true');
+    elements.status.append(spinner);
+  }
+  elements.status.append(text);
 }
 
 function hideStatus() {
